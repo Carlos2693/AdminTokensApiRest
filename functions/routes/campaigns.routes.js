@@ -6,6 +6,38 @@ const admin = require('firebase-admin');
 const db = admin.firestore();
 
 const campaigns = 'campaigns';
+const tokens = 'tokens';
+
+router.get('/api/campaigns/:tracker_id/tokens', async(req, res) => {
+
+    try {
+
+        const trackerId = req.params.tracker_id
+
+        const query = db.collection(campaigns)
+            .doc(trackerId)
+            .collection(tokens)
+        const querySnapshot = await query.get()
+        const docs = querySnapshot.docs
+
+        const array = docs.map(doc => {
+
+            const data = doc.data()
+            return {
+                id: doc.id,
+                dateToken: data.dateToken,
+                descriptionToken: data.descriptionToken,
+                image: data.image,
+                tokenName: data.tokenName,
+                tokenNumber: data.tokenNumber
+            }
+        })
+
+        return res.status(200).json(array)
+    } catch (error) {
+        return res.status(500).send(error)
+    }
+})
 
 router.get('/api/campaigns', async (_, res) => {
     try {
