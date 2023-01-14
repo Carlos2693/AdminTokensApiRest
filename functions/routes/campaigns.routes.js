@@ -115,8 +115,9 @@ router.get('/api/campaigns/:tracker_version_ids', async (req, res) => {
                             id: doc.id,
                             nameCampaign: docData.nameCampaign,
                             versionImage: docData.versionImage,
-                            versionTokens: versionTokens + "_" + requestVersionToken,
-                            image: imageData.image
+                            versionTokens: versionTokens,
+                            image: imageData.image,
+                            needUpdate: true
                         }
                     } else {
 
