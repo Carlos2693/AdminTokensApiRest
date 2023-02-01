@@ -5,15 +5,14 @@ const admin = require('firebase-admin');
 
 const db = admin.firestore();
 
-// const campaigns = 'campaigns';
-const campaigns = 'campaigns-Dev';
-// const tokens = 'tokens';
-const tokens = 'tokens-Dev';
+const campaigns = 'campaigns';
+const tokens = 'tokens';
+const fcmTokens = 'fcmTokens';
 
 router.get('/api2/campaigns/:tracker_id/tokens', async(req, res) => {
 
     const apikey = req.header('Authorization')
-    const query = db.collection(tokens)
+    const query = db.collection(fcmTokens)
     const querySnapshot = await query.get()
     const docs = querySnapshot.docs
     const fcmDocument = docs[0]
@@ -54,7 +53,7 @@ router.get('/api2/campaigns/:tracker_id/tokens', async(req, res) => {
 
 router.get('/api2/campaigns', async (req, res) => {
     const apikey = req.header('Authorization')
-    const query = db.collection('tokens')
+    const query = db.collection(fcmTokens)
         .doc(apikey)
     const querySnapshot = await query.get()
 
@@ -102,7 +101,7 @@ router.get('/api2/campaigns', async (req, res) => {
 router.get('/api2/campaigns/:tracker_version_ids', async (req, res) => {
 
     const apikey = req.header('Authorization')
-    const query = db.collection('tokens')
+    const query = db.collection(fcmTokens)
     const querySnapshot = await query.get()
     const docs = querySnapshot.docs
     const fcmDocument = docs[0]
