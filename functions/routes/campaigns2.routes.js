@@ -5,13 +5,15 @@ const admin = require('firebase-admin');
 
 const db = admin.firestore();
 
-const campaigns = 'campaigns';
-const tokens = 'tokens';
+// const campaigns = 'campaigns';
+const campaigns = 'campaigns-Dev';
+// const tokens = 'tokens';
+const tokens = 'tokens-Dev';
 
 router.get('/api2/campaigns/:tracker_id/tokens', async(req, res) => {
 
     const apikey = req.header('Authorization')
-    const query = db.collection('tokens')
+    const query = db.collection(tokens)
     const querySnapshot = await query.get()
     const docs = querySnapshot.docs
     const fcmDocument = docs[0]
