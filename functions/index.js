@@ -8,5 +8,6 @@ admin.initializeApp({
 });
 
 app.use(require("./routes/campaigns.routes"));
+app.use(require("./routes/campaigns2.routes"));
 
 exports.app = functions.https.onRequest(app);
