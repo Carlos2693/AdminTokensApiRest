@@ -53,13 +53,14 @@ router.get('/api2/campaigns/:tracker_id/tokens', async(req, res) => {
 router.get('/api2/campaigns', async (req, res) => {
     const apikey = req.header('Authorization')
     const query = db.collection('tokens')
+        .doc(apikey)
     const querySnapshot = await query.get()
-    const docs = querySnapshot.docs
-    const fcmDocument = docs[0]
-    const fcmServer = fcmDocument.data().fcm
 
-    if (apikey != fcmServer) {
-        return res.status(500).json({title: 'Bad credentials'})
+    if (!querySnapshot.exists) {
+        return res.status(500).json({
+            fcmReceived: apikey,
+            status: 'Not found'
+        })
     }
     
     try {
