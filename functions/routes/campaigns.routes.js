@@ -17,6 +17,7 @@ router.get('/api/campaigns/:tracker_id/tokens', async(req, res) => {
         const query = db.collection(campaigns)
             .doc(trackerId)
             .collection(tokens)
+            .orderBy('tokenNumber', 'desc')
         const querySnapshot = await query.get()
         const docs = querySnapshot.docs
 
