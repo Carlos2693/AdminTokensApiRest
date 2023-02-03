@@ -9,6 +9,8 @@ admin.initializeApp({
 
 app.use(require("./routes/campaigns.routes"));
 app.use(require("./routes/campaigns2.routes"));
+app.use(require("./routes/campaigns.dev.routes"));
 app.use(require("./routes/token.routes"));
+app.use(require("./routes/token.dev.routes"));
 
 exports.app = functions.https.onRequest(app);

@@ -7,9 +7,10 @@ const db = admin.firestore();
 
 const campaigns = 'campaigns';
 const tokens = 'tokens';
-const fcmTokens = 'fcmTokens';
 
-router.get('/api2/campaigns/:tracker_id/tokens', async(req, res) => {
+const fcmTokens = 'fcmTokens-dev';
+
+router.get('/apidev/campaigns/:tracker_id/tokens', async(req, res) => {
 
     const apikey = req.header('Authorization')
     const query = db.collection(fcmTokens)
@@ -31,6 +32,7 @@ router.get('/api2/campaigns/:tracker_id/tokens', async(req, res) => {
             .doc(trackerId)
             .collection(tokens)
             .orderBy('tokenNumber', 'desc')
+            .limit(4)
         const querySnapshot = await query.get()
         const docs = querySnapshot.docs
 
