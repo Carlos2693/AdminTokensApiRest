@@ -26,33 +26,62 @@ router.get('/apidev/campaigns/:tracker_id/tokens', async(req, res) => {
 
     try {
 
-        const trackerId = req.params.tracker_id
+        const version_tokens = parseInt(req.query.version_tokens)
+        if (Number.isNaN(version_tokens)) {
+            return res.status(200).json({versionToken: 'No version'})
+        } else {
 
-        const query = db.collection(campaigns)
-            .doc(trackerId)
-            .collection(tokens)
-            .orderBy('tokenNumber', 'desc')
-            .limit(4)
-        const querySnapshot = await query.get()
-        const docs = querySnapshot.docs
+            const trackerId = req.params.tracker_id
 
-        const array = docs.map(doc => {
-
-            const data = doc.data()
-            const objetives = data.objetives
+            const queryCampaign = db.collection(campaigns)
+                .doc(trackerId)
+            const snapshotCampaign = await queryCampaign.get()
             
-            return {
-                id: doc.id,
-                dateToken: data.dateToken,
-                descriptionToken: data.descriptionToken,
-                image: data.image,
-                tokenName: data.tokenName,
-                tokenNumber: data.tokenNumber,
-                objetives: objetives !== undefined ? objetives : []
-            }
-        })
+            var updateSwaps = false
+            if (snapshotCampaign.exists) {
+                const data = snapshotCampaign.data()
+                const versionTokens = data.versionTokens
 
-        return res.status(200).json(array)
+                updateSwaps = versionTokens > version_tokens
+            } else {
+                updateSwaps = false
+            }
+
+            if (updateSwaps) {
+
+                const query = db.collection(campaigns)
+                    .doc(trackerId)
+                    .collection(tokens)
+                    .orderBy('tokenNumber', 'desc')
+                const querySnapshot = await query.get()
+                const docs = querySnapshot.docs
+
+                const array = docs.map(doc => {
+
+                    const data = doc.data()
+                    const objetives = data.objetives
+                    
+                    return {
+                        id: doc.id,
+                        dateToken: data.dateToken,
+                        descriptionToken: data.descriptionToken,
+                        image: data.image,
+                        tokenName: data.tokenName,
+                        tokenNumber: data.tokenNumber,
+                        objetives: objetives !== undefined ? objetives : []
+                    }
+                })
+
+                return res.status(200).json({
+                    status: true,
+                    array: array
+                })
+            } else {
+                return res.status(200).json({
+                    status: false
+                })
+            }
+        }        
     } catch (error) {
         return res.status(500).send(error)
     }
