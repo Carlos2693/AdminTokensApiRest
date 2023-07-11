@@ -12,18 +12,6 @@ const fcmTokens = 'fcmTokens-3';
 
 router.get('/api3/campaigns/:tracker_id/tokens', async(req, res) => {
 
-    const apikey = req.header('Authorization')
-    const query = db.collection(fcmTokens)
-        .doc(apikey)
-    const querySnapshot = await query.get()
-
-    if (!querySnapshot.exists) {
-        return res.status(500).json({
-            fcmReceived: apikey,
-            status: 'Not found'
-        })
-    }
-
     try {
 
         var versionTokens = 0
